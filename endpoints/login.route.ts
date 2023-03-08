@@ -1,7 +1,7 @@
 import express from "express";
 import { validateAndRedirectOnFail } from "./middewares/validate";
 import { object, string } from "yup";
-import User from "@models/user.model";
+import User, { UserType } from "@models/user.model";
 import { compare } from "bcrypt";
 
 const router = express.Router();
@@ -15,7 +15,12 @@ type LoginBody = {
 };
 
 router.get("/", (req, res) => {
-  return res.render("admin/login.html");
+  req.session.destroy((error) => {
+    if (error) {
+      console.log(error);
+    }
+    return res.render("admin/login.html");
+  });
 });
 router.post(
   "/",
@@ -37,7 +42,10 @@ router.post(
     const password = (user.get("password") ?? "") as string;
     try {
       const isPasswordSame = await compare(body.password, password);
+
       if (isPasswordSame) {
+        req.session.user = user.dataValues as UserType;
+        req.session.save();
         return res.redirect("/dashboard");
       }
       return res.redirect("/login");
