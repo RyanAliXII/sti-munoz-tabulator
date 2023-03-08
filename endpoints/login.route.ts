@@ -8,6 +8,10 @@ router.get("/", (req, res)=>{
 
     res.render("admin/login.html")
 })
+router.post("/", (req, res)=>{
+    res.redirect("/dashboard")
+})
+
 
 
 
