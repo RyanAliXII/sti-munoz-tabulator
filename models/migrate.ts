@@ -2,7 +2,7 @@ import User, { createUser } from "@models/user.model"
 import * as dotenv from "dotenv"
 import validator from "validator"
 import bycrypt from "bcrypt"
-import { ValidationError, ValidationErrorItem } from "sequelize"
+import { ValidationError } from "sequelize"
 const env = dotenv.config()
 
 
