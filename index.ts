@@ -6,9 +6,7 @@ import loginRouter from "@endpoints/login.route"
 import dashboardRouter from "@endpoints/dashboard.route"
 import path from "path"
 import ejs from "ejs"
-
-import { createUser, User } from "@models/user.model"
-import { runMigration } from "@models/migrate"
+import { runMigration, runSeed } from "@models/migrate"
 const PORT = env.parsed?.PORT ?? 3000
 
 app.engine('html', ejs.renderFile)
@@ -21,7 +19,10 @@ app.get('/', (req, res) => {
 
 app.use("/login", loginRouter)
 app.use("/dashboard", dashboardRouter)
+
 runMigration()
+runSeed()
+
 app.listen(PORT, () => {
     console.log(`TypeScript with Express
          http://localhost:${PORT}/`);

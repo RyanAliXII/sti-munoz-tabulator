@@ -24,7 +24,13 @@ export const User = sequelize.define("user", {
 })
 
 
-export const createUser = (user:UserType)=>{
-    User.create(user)
+export const createUser = async(user:UserType)=>{
+    try{
+        await User.create(user)
+    }
+    catch(error){
+        throw error
+    }
+   
 }
 export default User
