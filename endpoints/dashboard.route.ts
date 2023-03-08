@@ -1,13 +1,8 @@
-import express from "express"
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 
+router.get("/", (req, res) => {
+  res.render("admin/dashboard.html");
+});
 
-
-router.get("/", (req, res)=>{
-    
-    res.render("admin/dashboard.html")
-})
-
-
-export default router
-
+export default router;
