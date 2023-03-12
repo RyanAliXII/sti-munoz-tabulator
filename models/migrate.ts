@@ -3,11 +3,13 @@ import * as dotenv from "dotenv";
 import validator from "validator";
 import bycrypt from "bcrypt";
 import { ValidationError } from "sequelize";
+import Event from "./event";
 const env = dotenv.config();
 
 export const runMigration = async () => {
   try {
     User.sync();
+    Event.sync();
   } catch (error) {
     console.log(error);
   }
