@@ -65,6 +65,7 @@
             },
 
             edit: {
+              id: "",
               name: "",
               date: "",
             },
@@ -93,6 +94,9 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(this.form.add),
             });
+            if (response.status >= 400) {
+              throw response;
+            }
             Swal.fire("Success", "Event has been created.", "success");
             this.fetchEvents();
           } catch {
@@ -112,6 +116,9 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(this.form.edit),
             });
+            if (response.status >= 400) {
+              throw response;
+            }
             this.fetchEvents();
             Swal.fire("Success", "Event has been updated.", "success");
           } catch {
@@ -151,9 +158,16 @@
                 method: "DELETE",
               });
               Swal.fire("Deleted!", "Event has been deleted.", "success");
+              if (response.status >= 400) {
+                throw response;
+              }
               this.fetchEvents();
             } catch (error) {
-              console.log(error);
+              Swal.fire(
+                "Error",
+                "Unknown error occured while deleting event.",
+                "error"
+              );
             }
           }
         },
