@@ -15,7 +15,7 @@ import pg from "pg";
 import { DB_NAME, HOST, PASSWORD, USERNAME } from "@models/sequelize";
 import { UserType } from "@models/user.model";
 import loginRequired from "@endpoints/middewares/loginRequired";
-
+import eventRouter from "@endpoints/events.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -59,7 +59,7 @@ app.use("/login", loginRouter);
 // route registered after this statement will be affected with required login.
 app.use(loginRequired);
 app.use("/dashboard", dashboardRouter);
-
+app.use("/events", eventRouter);
 app.get("/", (req, res) => {
   return res.send("TypeScript With Express");
 });
