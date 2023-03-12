@@ -29,9 +29,12 @@ router.get("/", async (req, res) => {
     });
   } catch {
     if (req.headers["content-type"] === "application/json") {
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Unknown error occured", data: {} });
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Unknown error occured",
+        data: {
+          events: [],
+        },
+      });
     }
     return res.render("admin/event/index.html", {
       module: Module,

@@ -5,6 +5,7 @@ import bycrypt from "bcrypt";
 import { ValidationError } from "sequelize";
 import Event from "./event";
 import { Team } from "./team.model";
+import { Rank } from "./rank";
 const env = dotenv.config();
 
 export const runMigration = async () => {
@@ -12,6 +13,7 @@ export const runMigration = async () => {
     User.sync();
     Event.sync();
     Team.sync();
+    Rank.sync();
   } catch (error) {
     console.log(error);
   }

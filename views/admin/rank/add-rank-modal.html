@@ -1,39 +1,35 @@
 <div
   class="modal fade"
-  id="editEventModal"
+  id="addModal"
   tabindex="-1"
-  aria-labelledby="editEventModal"
+  aria-labelledby="addModal"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editEventModalLabel">Edit event</h5>
-        <button
-          type="button"
-          class="btn-close"
-          @click="closeEditEventModal"
-        ></button>
+        <h5 class="modal-title" id="addModalLabel">Create rank</h5>
+        <button type="button" class="btn-close" @click="closeAddModal"></button>
       </div>
       <div class="modal-body">
-        <form class="mb-2" @submit.prevent="updateEvent">
+        <form class="mb-2" @submit.prevent="createRank">
           <div class="form-group">
-            <label for="name" class="mb-1">Event name</label>
+            <label for="name" class="mb-1">Rank name</label>
             <input
               type="text"
               name="name"
               class="form-control"
-              v-model="form.edit.name"
+              v-model="form.add.name"
               required
             />
           </div>
           <div class="form-group">
-            <label for="day" class="mb-1">Date</label>
+            <label for="name" class="mb-1">Points</label>
             <input
-              type="date"
-              name="date"
+              type="number"
+              name="points"
               class="form-control"
-              v-model="form.edit.date"
+              v-model="form.add.points"
               required
             />
           </div>
@@ -41,7 +37,7 @@
             <button
               type="button"
               class="btn btn-outline-secondary"
-              @click="closeEditEventModal"
+              @click="closeAddModal"
             >
               Close
             </button>

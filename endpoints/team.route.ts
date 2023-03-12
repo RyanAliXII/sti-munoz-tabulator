@@ -16,18 +16,32 @@ const TeamUpdateSchemaValidation = object().shape({
 });
 
 router.get("/", async (req, res) => {
-  if (req.headers["content-type"] == "application/json") {
-    const teams = (await Team.findAll()).map((t) => t.dataValues);
-    return res.json({
-      message: "Teams fetched.",
-      data: {
-        teams: teams ?? [],
-      },
+  try {
+    if (req.headers["content-type"] == "application/json") {
+      const teams = (await Team.findAll()).map((t) => t.dataValues);
+      return res.json({
+        message: "Teams fetched.",
+        data: {
+          teams: teams ?? [],
+        },
+      });
+    }
+    return res.render("admin/team/index.html", {
+      module: Module,
+    });
+  } catch {
+    if (req.headers["content-type"] === "application/json") {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Unknown error occured.",
+        data: {
+          teams: [],
+        },
+      });
+    }
+    return res.render("admin/team/index.html", {
+      module: Module,
     });
   }
-  return res.render("admin/team/index.html", {
-    module: Module,
-  });
 });
 
 router.post("/", validateJSON(TeamCreateSchemaValidation), async (req, res) => {

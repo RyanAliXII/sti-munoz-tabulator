@@ -121,7 +121,7 @@
                     this.fetchTeams()
                 }
                 catch{
-                    Swal.fire("Error", "Unknown error occured while creating team.", "error")
+                    Swal.fire("Error", "Unknown error occured while updating team.", "error")
                 }
                 finally{
                     this.closeEditModal()
@@ -130,8 +130,8 @@
             async confirmDelete(id){
 
                 const result = await Swal.fire({
-                    title: "Delete event?",
-                    text: "Are you sure you want to delete this event?",
+                    title: "Delete team?",
+                    text: "Are you sure you want to delete this team?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

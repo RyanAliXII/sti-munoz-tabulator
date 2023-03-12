@@ -17,6 +17,7 @@ import { UserType } from "@models/user.model";
 import loginRequired from "@endpoints/middewares/loginRequired";
 import eventRouter from "@endpoints/events.route";
 import teamRouter from "@endpoints/team.route";
+import rankRouter from "@endpoints/rank.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -62,6 +63,7 @@ app.use(loginRequired);
 app.use("/dashboard", dashboardRouter);
 app.use("/events", eventRouter);
 app.use("/teams", teamRouter);
+app.use("/ranks", rankRouter);
 app.get("/", (req, res) => {
   return res.send("TypeScript With Express");
 });
