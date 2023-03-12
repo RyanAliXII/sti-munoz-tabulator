@@ -13,11 +13,12 @@ import Session from "express-session";
 import PGSession from "connect-pg-simple";
 import pg from "pg";
 import { DB_NAME, HOST, PASSWORD, USERNAME } from "@models/sequelize";
-import { UserType } from "@models/user.model";
+import { UserType } from "@models/model";
 import loginRequired from "@endpoints/middewares/loginRequired";
 import eventRouter from "@endpoints/events.route";
 import teamRouter from "@endpoints/team.route";
 import rankRouter from "@endpoints/rank.route";
+import scoreRouter from "@endpoints/score.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -59,11 +60,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/assets", express.static("assets"));
 app.use("/login", loginRouter);
 // route registered after this statement will be affected with required login.
-app.use(loginRequired);
+// app.use(loginRequired);
 app.use("/dashboard", dashboardRouter);
 app.use("/events", eventRouter);
 app.use("/teams", teamRouter);
 app.use("/ranks", rankRouter);
+app.use("/scores/", scoreRouter);
 app.get("/", (req, res) => {
   return res.send("TypeScript With Express");
 });

@@ -1,0 +1,135 @@
+!
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../../partials/head.ejs", {title: "Score"}) %>
+  <body>
+    <main id="ScoreApp">
+      <div class="d-flex" style="height: 100vh">
+        <%- include("../../partials//sidebar.ejs", {module: module}) %>
+        <div class="container" style="margin-top: 100px">
+          <div class="form-group">
+            <select
+              class="form-control"
+              @change="selectEvent"
+              v-model="form.event"
+            >
+              <option :value="{id:'', name:'' }" selected>Select event</option>
+              <option v-for="event in events" :value="event">
+                {{event.name}}
+              </option>
+            </select>
+            <table class="table table-bordered rounded mt-4 table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col">Team name</th>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Additional Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(team, index) in form.teams">
+                  <td>{{team.name}}</td>
+                  <td>
+                    <select
+                      class="form-control"
+                      v-model="form.teams[index].rankId"
+                    >
+                      <option selected="selected" value="{id:''}">
+                        Select ranking
+                      </option>
+                      <option v-for="rank in ranks" :value="rank.id">
+                        {{rank.name}}
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model="form.teams[index].additionalPoints"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <button type="button" class="btn btn-primary" @click="submitScores">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <%- include("../../partials/script.ejs") %>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          events: [],
+          ranks: [],
+          form: {
+            event: {},
+            teams: [],
+          },
+        };
+      },
+      mounted() {
+        this.fetchEvents();
+        this.fetchTeams();
+        this.fetchRanks();
+      },
+      methods: {
+        async fetchEvents() {
+          try {
+            const response = await fetch("/events", {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            });
+            const { data } = await response.json();
+            this.events = data?.events ?? [];
+          } catch {}
+        },
+        async selectEvent() {
+          console.log(this.form.event);
+        },
+        async fetchTeams() {
+          try {
+            const response = await fetch("/teams", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const { data } = await response.json();
+            this.form.teams = (data?.teams ?? []).map((t) => ({
+              id: t.id,
+              name: t.name,
+              rankId: "",
+              additionalPoints: 0,
+            }));
+          } catch {
+            this.teams = [];
+          }
+        },
+        async fetchRanks() {
+          try {
+            const response = await fetch("/ranks", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const { data } = await response.json();
+            this.ranks = data?.ranks ?? [];
+          } catch {
+            this.ranks = [];
+          }
+        },
+        submitScores() {
+          console.log(this.form);
+        },
+      },
+    }).mount("#ScoreApp");
+  </script>
+</html>

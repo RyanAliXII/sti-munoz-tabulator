@@ -1,4 +1,4 @@
-import { Rank } from "@models/rank";
+import { Rank } from "@models/model";
 import express from "express";
 import { number, object, string } from "yup";
 import { validateJSON } from "./middewares/validate";
@@ -31,7 +31,8 @@ router.get("/", async (req, res) => {
       });
     }
     return res.render("admin/rank/index.html", { module: Module });
-  } catch {
+  } catch (error) {
+    console.error(error);
     if (req.headers["content-type"] === "application/json") {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Unknown error occured.",
@@ -49,6 +50,7 @@ router.post("/", validateJSON(RankAddSchemaValidation), async (req, res) => {
       data: {},
     });
   } catch (error) {
+    console.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: "Unknown error occured.",
     });
@@ -75,6 +77,7 @@ router.put(
         data: {},
       });
     } catch (error) {
+      console.error(error);
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Unknown error occured.",
       });
@@ -95,6 +98,7 @@ router.delete("/:id", async (req, res) => {
       data: {},
     });
   } catch (error) {
+    console.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: "Unknown error occured.",
     });

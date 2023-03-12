@@ -1,4 +1,4 @@
-import Event, { createEvent } from "@models/event";
+import { Event } from "@models/model";
 import { name } from "ejs";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
@@ -18,6 +18,7 @@ const EventUpdateSchemaValidation = object().shape({
   name: string().required(),
   date: date().required(),
 });
+
 router.get("/", async (req, res) => {
   try {
     if (req.headers["content-type"] === "application/json") {
@@ -27,7 +28,8 @@ router.get("/", async (req, res) => {
     res.render("admin/event/index.html", {
       module: Module,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
     if (req.headers["content-type"] === "application/json") {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Unknown error occured",
@@ -50,7 +52,8 @@ router.post(
       return res
         .status(StatusCodes.OK)
         .json({ message: "Event created successfully", data: {} });
-    } catch {
+    } catch (error) {
+      console.error(error);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: "Unknown error occured.", data: {} });
@@ -78,7 +81,8 @@ router.put(
       return res
         .status(StatusCodes.OK)
         .json({ message: "Event updated successfully", data: {} });
-    } catch {
+    } catch (error) {
+      console.error(error);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: "Unknown error occured.", data: {} });
@@ -95,6 +99,7 @@ router.delete("/:id", async (req, res) => {
     });
     return res.status(StatusCodes.OK).json({ messsage: "Event deleted." });
   } catch (error) {
+    console.error(error);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Unknown error occured" });

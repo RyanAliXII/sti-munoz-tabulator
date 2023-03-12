@@ -1,7 +1,7 @@
 import express from "express";
 import { validateAndRedirectOnFail } from "./middewares/validate";
 import { object, string } from "yup";
-import User, { UserType } from "@models/user.model";
+import { User, UserType } from "@models/model";
 import { compare } from "bcrypt";
 
 const router = express.Router();
