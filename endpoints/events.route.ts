@@ -6,9 +6,15 @@ import { date, object, string } from "yup";
 import { validateJSON } from "./middewares/validate";
 const router = express.Router();
 
-const Module = "Events";
+const Module = "Event";
 
-const EventSchemaValidation = object().shape({
+const EventCreateSchemaValidation = object().shape({
+  name: string().required(),
+  date: date().required(),
+});
+
+const EventUpdateSchemaValidation = object().shape({
+  id: string().required().uuid(),
   name: string().required(),
   date: date().required(),
 });
@@ -27,47 +33,55 @@ router.get("/", async (req, res) => {
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: "Unknown error occured", data: {} });
     }
-    res.render("admin/event/index.html", {
+    return res.render("admin/event/index.html", {
       module: Module,
     });
   }
 });
-router.post("/", validateJSON(EventSchemaValidation), async (req, res) => {
-  try {
-    await Event.create(req.body);
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "Event created successfully", data: {} });
-  } catch {
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Unknown error occured.", data: {} });
+router.post(
+  "/",
+  validateJSON(EventCreateSchemaValidation),
+  async (req, res) => {
+    try {
+      await Event.create(req.body);
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: "Event created successfully", data: {} });
+    } catch {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Unknown error occured.", data: {} });
+    }
   }
-});
+);
 
-router.put("/:id", validateJSON(EventSchemaValidation), async (req, res) => {
-  try {
-    const event = req.body;
-    await Event.update(
-      {
-        name: event.name,
-        date: event.date,
-      },
-      {
-        where: {
-          id: event.id,
+router.put(
+  "/:id",
+  validateJSON(EventUpdateSchemaValidation),
+  async (req, res) => {
+    try {
+      const event = req.body;
+      await Event.update(
+        {
+          name: event.name,
+          date: event.date,
         },
-      }
-    );
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "Event updated successfully", data: {} });
-  } catch {
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Unknown error occured.", data: {} });
+        {
+          where: {
+            id: event.id,
+          },
+        }
+      );
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: "Event updated successfully", data: {} });
+    } catch {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Unknown error occured.", data: {} });
+    }
   }
-});
+);
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {

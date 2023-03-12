@@ -4,12 +4,14 @@ import validator from "validator";
 import bycrypt from "bcrypt";
 import { ValidationError } from "sequelize";
 import Event from "./event";
+import { Team } from "./team.model";
 const env = dotenv.config();
 
 export const runMigration = async () => {
   try {
     User.sync();
     Event.sync();
+    Team.sync();
   } catch (error) {
     console.log(error);
   }
