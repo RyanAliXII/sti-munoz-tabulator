@@ -123,10 +123,6 @@ Score.belongsTo(Event, { foreignKey: "eventId" });
 Score.belongsTo(Team, { foreignKey: "teamId" });
 Score.belongsTo(Rank, { foreignKey: "rankId" });
 
-Event.hasMany(Score, { foreignKey: "eventId" });
-Team.hasMany(Score, { foreignKey: "teamId" });
-Rank.hasMany(Score, { foreignKey: "rankId" });
-
-// Rank.belongsToMany(Event, { through: Score });
-// Team.belongsToMany(Event, { through: Score });
-// Event.belongsToMany(Team, { through: Score });
+Event.hasOne(Score, { foreignKey: "eventId" });
+Team.hasOne(Score, { foreignKey: "teamId" });
+Rank.hasOne(Score, { foreignKey: "rankId" });

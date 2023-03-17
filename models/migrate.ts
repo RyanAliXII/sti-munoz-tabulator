@@ -8,13 +8,14 @@ const env = dotenv.config();
 
 export const runMigration = async () => {
   try {
-    User.sync();
-    Event.sync();
-    Team.sync();
-    Rank.sync();
-    Score.sync();
+    await User.sync();
+    await Event.sync();
+    await Team.sync();
+    await Rank.sync();
+    await Score.sync();
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 

@@ -19,6 +19,7 @@ import eventRouter from "@endpoints/events.route";
 import teamRouter from "@endpoints/team.route";
 import rankRouter from "@endpoints/rank.route";
 import scoreRouter from "@endpoints/score.route";
+import leaderboardRouter from "@endpoints/leaderboard.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -65,13 +66,15 @@ app.use("/dashboard", dashboardRouter);
 app.use("/events", eventRouter);
 app.use("/teams", teamRouter);
 app.use("/ranks", rankRouter);
-app.use("/scores/", scoreRouter);
+app.use("/scores", scoreRouter);
+app.use("/leaderboards", leaderboardRouter);
 app.get("/", (req, res) => {
   return res.send("TypeScript With Express");
 });
 
-runMigration();
-runSeed();
+runMigration().then(() => {
+  runSeed();
+});
 
 app.listen(PORT, () => {
   console.log(`TypeScript with Express
