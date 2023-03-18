@@ -45,20 +45,26 @@ router.get("/", validatePemissions(["Team.Read"]), async (req, res) => {
   }
 });
 
-router.post("/", validateJSON(TeamCreateSchemaValidation), async (req, res) => {
-  try {
-    await Team.create(req.body);
-    return res.json({ message: "Team created.", data: {} });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Unknown error occured.", data: {} });
+router.post(
+  "/",
+  validateJSON(TeamCreateSchemaValidation),
+  validatePemissions(["Team.Create"]),
+  async (req, res) => {
+    try {
+      await Team.create(req.body);
+      return res.json({ message: "Team created.", data: {} });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Unknown error occured.", data: {} });
+    }
   }
-});
+);
 router.put(
   "/:id",
   validateJSON(TeamUpdateSchemaValidation),
+  validatePemissions(["Team.Update"]),
   async (req, res) => {
     try {
       const team = req.body;
@@ -81,7 +87,7 @@ router.put(
     }
   }
 );
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validatePemissions(["Team.Delete"]), async (req, res) => {
   const id = req.params.id;
   try {
     await Team.destroy({

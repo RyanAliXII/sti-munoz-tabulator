@@ -42,23 +42,29 @@ router.get("/", validatePemissions(["Rank.Read"]), async (req, res) => {
     return res.render("admin/rank/index.html", { module: Module });
   }
 });
-router.post("/", validateJSON(RankAddSchemaValidation), async (req, res) => {
-  try {
-    await Rank.create(req.body);
-    return res.json({
-      message: "Rank created.",
-      data: {},
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Unknown error occured.",
-    });
+router.post(
+  "/",
+  validateJSON(RankAddSchemaValidation),
+  validatePemissions(["Rank.Create"]),
+  async (req, res) => {
+    try {
+      await Rank.create(req.body);
+      return res.json({
+        message: "Rank created.",
+        data: {},
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Unknown error occured.",
+      });
+    }
   }
-});
+);
 router.put(
   "/:id",
   validateJSON(RankUpdateSchemaValidation),
+  validatePemissions(["Rank.Update"]),
   async (req, res) => {
     try {
       await Rank.update(
@@ -84,7 +90,7 @@ router.put(
     }
   }
 );
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validatePemissions(["Rank.Delete"]), async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {

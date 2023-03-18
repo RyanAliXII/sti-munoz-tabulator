@@ -42,6 +42,7 @@ export const validatePemissions = (requiredPermissions: string[]) => {
       }
       next();
     } catch {
+      console.log("Failed to validate permissions");
       if (req.headers["content-type"] === "application/json") {
         return res.status(StatusCodes.FORBIDDEN).json({
           message: "forbidden",

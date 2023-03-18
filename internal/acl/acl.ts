@@ -8,9 +8,12 @@ export const permissions: string[] = [
   "Event.Update",
   "Event.Delete",
   "Event.Create",
-  "Rank.Add",
+  "Rank.Create",
   "Rank.Update",
   "Rank.Delete",
   "Rank.Read",
   "Account.Read",
+  "Account.Create",
+  "Account.Update",
+  "Account.Delete",
 ];

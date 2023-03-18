@@ -52,6 +52,7 @@ router.get("/", validatePemissions(["Account.Read"]), async (req, res) => {
 router.post(
   "/",
   validateJSON(AccountCreateValidationSchema),
+  validatePemissions(["Account.Create"]),
   async (req, res) => {
     try {
       const account = req.body;

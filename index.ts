@@ -61,6 +61,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/assets", express.static("assets"));
 app.use("/login", loginRouter);
+app.get("/", (req, res) => {
+  return res.send("TypeScript With Express");
+});
 // route registered after this statement will be affected with required login.
 app.use(loginRequired);
 
@@ -77,9 +80,6 @@ app.use("/ranks", rankRouter);
 app.use("/scores", scoreRouter);
 app.use("/leaderboards", leaderboardRouter);
 app.use("/accounts", accountRouter);
-app.get("/", (req, res) => {
-  return res.send("TypeScript With Express");
-});
 
 runMigration().then(() => {
   runSeed();

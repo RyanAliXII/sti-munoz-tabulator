@@ -3,6 +3,7 @@ import { TeamScore, EventType } from "definitions/types";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { array, number, object, string } from "yup";
+import { validatePemissions } from "./middewares/validate";
 
 const Module = "Score";
 
@@ -21,7 +22,7 @@ const ScoreValidationSchema = array().of(
     additionalPoints: number().min(0).integer(),
   })
 );
-router.get("/", async (req, res) => {
+router.get("/", validatePemissions(["Score.Update"]), async (req, res) => {
   try {
     if (req.headers["content-type"] === "application/json") {
     }
@@ -37,31 +38,35 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/events", async (req, res) => {
-  try {
-    const scores = req.body as ScoreType;
-    const data = scores.teams?.map((team) => {
-      return {
-        eventId: scores.event.id,
-        teamId: team.id,
-        rankId: team.score.rankId,
-        additionalPoints: team.score.additionalPoints,
-      };
-    });
-    const parsedData = await ScoreValidationSchema.validate(data);
-    if (!parsedData) {
-      throw "parsedData is undefined.";
+router.post(
+  "/events",
+  validatePemissions(["Score.Update"]),
+  async (req, res) => {
+    try {
+      const scores = req.body as ScoreType;
+      const data = scores.teams?.map((team) => {
+        return {
+          eventId: scores.event.id,
+          teamId: team.id,
+          rankId: team.score.rankId,
+          additionalPoints: team.score.additionalPoints,
+        };
+      });
+      const parsedData = await ScoreValidationSchema.validate(data);
+      if (!parsedData) {
+        throw "parsedData is undefined.";
+      }
+      await Score.bulkCreate(parsedData, {
+        updateOnDuplicate: ["teamId", "eventId", "additionalPoints", "rankId"],
+      });
+      return res.status(StatusCodes.OK).json({});
+    } catch (error) {
+      console.log(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({});
     }
-    await Score.bulkCreate(parsedData, {
-      updateOnDuplicate: ["teamId", "eventId", "additionalPoints", "rankId"],
-    });
-    return res.status(StatusCodes.OK).json({});
-  } catch (error) {
-    console.log(error);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({});
   }
-});
-router.get("/events/:eventId/teams", async (req, res) => {
+);
+router.get("/events/:eventId/teams",  validatePemissions(["Score.Update"]), async (req, res) => {
   const { eventId } = req.params;
   try {
     const data = await Team.findAll({

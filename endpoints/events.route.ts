@@ -46,6 +46,7 @@ router.get("/", validatePemissions(["Event.Read"]), async (req, res) => {
 router.post(
   "/",
   validateJSON(EventCreateSchemaValidation),
+  validatePemissions(["Event.Create"]),
   async (req, res) => {
     try {
       await Event.create(req.body);
@@ -64,6 +65,7 @@ router.post(
 router.put(
   "/:id",
   validateJSON(EventUpdateSchemaValidation),
+  validatePemissions(["Event.Update"]),
   async (req, res) => {
     try {
       const event = req.body;
@@ -89,20 +91,24 @@ router.put(
     }
   }
 );
-router.delete("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    await Event.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(StatusCodes.OK).json({ messsage: "Event deleted." });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Unknown error occured" });
+router.delete(
+  "/:id",
+  validatePemissions(["Event.Update"]),
+  async (req, res) => {
+    const id = req.params.id;
+    try {
+      await Event.destroy({
+        where: {
+          id: id,
+        },
+      });
+      return res.status(StatusCodes.OK).json({ messsage: "Event deleted." });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Unknown error occured" });
+    }
   }
-});
+);
 export default router;

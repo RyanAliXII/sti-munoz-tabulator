@@ -32,14 +32,14 @@
                     <button
                       class="btn btn-outline-primary"
                       @click="editEvent(event)"
-                      required-permission="Event.Edit"
+                      required-permission="Event.Update"
                     >
                       <i class="bi bi-pen"></i>
                     </button>
                     <button
                       class="btn btn-outline-danger"
                       @click="confirmDelete($event, event.id)"
-                      required-permission="Event.DeletepA"
+                      required-permission="Event.Delete"
                     >
                       <i class="bi bi-trash"></i>
                     </button>
