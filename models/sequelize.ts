@@ -2,11 +2,11 @@ import { Sequelize } from "sequelize";
 import * as dotenv from "dotenv";
 const env = dotenv.config();
 
-const PORT = env.parsed?.DB_PORT;
-export const DB_NAME = env.parsed?.DB_NAME;
-export const HOST = env.parsed?.DB_HOST;
-export const USERNAME = env.parsed?.DB_USERNAME;
-export const PASSWORD = env.parsed?.DB_PASSWORD;
+const PORT = process.env.DB_PORT;
+export const DB_NAME = process.env.DB_NAME;
+export const HOST = process.env.DB_HOST;
+export const USERNAME = process.env.DB_USERNAME;
+export const PASSWORD = process.env.DB_PASSWORD;
 
 const sequelize = new Sequelize({
   host: HOST,

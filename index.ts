@@ -8,7 +8,7 @@ import path from "path";
 import ejs from "ejs";
 import { runMigration, runSeed } from "@models/migrate";
 import bodyParser from "body-parser";
-const PORT = env.parsed?.PORT ?? 3000;
+const PORT = process.env.PORT ?? 3000;
 import Session from "express-session";
 import PGSession from "connect-pg-simple";
 import pg from "pg";
@@ -35,7 +35,7 @@ const pgPool = new pg.Pool({
   password: PASSWORD,
   port: 5432,
 });
-const SESSION_SECRET = env.parsed?.SESSION_SECRET;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 if (!SESSION_SECRET) {
   console.warn(
