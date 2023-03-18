@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../../partials/head.ejs", {title: "Score"}) %>
+  <body>
+    <main id="ScoreApp">
+      <div class="d-flex" style="height: 100vh">
+        <%- include("../../partials//sidebar.ejs", {module: module}) %>
+        <div class="container" style="margin-top: 100px">
+          <div class="form-group">
+            <select
+              class="form-select"
+              @change="fetchTeamAndScoresByEventId"
+              v-model="form.event"
+            >
+              <option :value="{id:'', name:'' }">Select event</option>
+              <option v-for="event in events" :value="event">
+                {{event.name}}
+              </option>
+            </select>
+
+            <table
+              v-if="form.teams.length > 0"
+              class="table table-bordered rounded mt-4 table-responsive"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Team name</th>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Additional Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(team, index) in form.teams">
+                  <td>{{team.name}}</td>
+                  <td>
+                    <select
+                      class="form-control"
+                      v-model="form.teams[index].score.rankId"
+                    >
+                      <option selected="selected" value="">
+                        Select ranking
+                      </option>
+                      <option v-for="rank in ranks" :value="rank.id">
+                        {{rank.name}}
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model="form.teams[index].score.additionalPoints"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div
+              v-if="form.teams.length === 0 "
+              class="d-flex justify-content-center align-items-center mt-2 border"
+              style="height: 200px"
+            >
+              <small class="text-secondary"
+                >No event selected: Please select event to score.
+              </small>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="submitScores"
+              v-if="form.teams.length > 0"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <%- include("../../partials/script.ejs") %>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          events: [],
+          ranks: [],
+          form: {
+            event: { id: "", name: "" },
+            teams: [],
+          },
+        };
+      },
+      mounted() {
+        this.fetchEvents();
+        this.fetchRanks();
+      },
+      methods: {
+        async fetchEvents() {
+          try {
+            const response = await fetch("/events", {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            });
+            const { data } = await response.json();
+            this.events = data?.events ?? [];
+          } catch {}
+        },
+
+        async fetchRanks() {
+          try {
+            const response = await fetch("/ranks", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const { data } = await response.json();
+            this.ranks = data?.ranks ?? [];
+          } catch {
+            this.ranks = [];
+          }
+        },
+        async fetchTeamAndScoresByEventId() {
+          if (this.form.event.id.length === 0) {
+            return;
+          }
+          try {
+            const response = await fetch(
+              `/scores/events/${this.form.event.id}/teams`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const { data } = await response.json();
+            console.log(data);
+            this.form.teams = data?.teams ?? [];
+          } catch {
+            this.ranks = [];
+          }
+        },
+        async submitScores() {
+          try {
+            const response = await fetch("/scores/events", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                event: this.form.event,
+                teams: this.form.teams,
+              }),
+            });
+
+            if (response.status == 200) {
+              Swal.fire(
+                "Success",
+                `Scores for ${this.form.event.name} event has been submitted.`,
+                "success"
+              );
+              return;
+            }
+            throw "score did not submit.";
+          } catch {
+            Swal.fire(
+              "Error",
+              `Unknown error occured while submitting score for ${this.form.event.name} event.`,
+              "error"
+            );
+          }
+        },
+      },
+    }).mount("#ScoreApp");
+  </script>
+</html>
