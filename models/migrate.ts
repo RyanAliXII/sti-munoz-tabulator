@@ -29,10 +29,10 @@ export const runSeed = async () => {
 };
 const createRootUser = async () => {
   try {
-    const email = env.parsed?.ROOT_USER_EMAIL;
-    const password = env.parsed?.ROOT_USER_PASSWORD;
-    const givenName = env.parsed?.ROOT_USER_GIVEN_NAME ?? "";
-    const surname = env.parsed?.ROOT_USER_SURNAME ?? "";
+    const email = process.env.ROOT_USER_EMAIL;
+    const password = process.env.ROOT_USER_PASSWORD;
+    const givenName = process.env?.ROOT_USER_GIVEN_NAME ?? "";
+    const surname = process.env?.ROOT_USER_SURNAME ?? "";
 
     if (!email || !password) {
       throw "Root user email and password should be added in your .env";
