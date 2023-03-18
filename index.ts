@@ -62,7 +62,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/assets", express.static("assets"));
 app.use("/login", loginRouter);
 // route registered after this statement will be affected with required login.
-// app.use(loginRequired);
+app.use(loginRequired);
+
+app.use((req, res, next) => {
+  res.locals = {
+    user: req.session.user,
+  };
+  next();
+});
 app.use("/dashboard", dashboardRouter);
 app.use("/events", eventRouter);
 app.use("/teams", teamRouter);

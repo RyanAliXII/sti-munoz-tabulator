@@ -1,6 +1,6 @@
 import express from "express";
 import { object, string } from "yup";
-import { validateJSON } from "./middewares/validate";
+import { validateJSON, validatePemissions } from "./middewares/validate";
 import { Team } from "@models/model";
 import { StatusCodes } from "http-status-codes";
 const router = express.Router();
@@ -15,7 +15,7 @@ const TeamUpdateSchemaValidation = object().shape({
   name: string().required(),
 });
 
-router.get("/", async (req, res) => {
+router.get("/", validatePemissions(["Team.Read"]), async (req, res) => {
   try {
     if (req.headers["content-type"] == "application/json") {
       const teams = (await Team.findAll()).map((t) => t.dataValues);

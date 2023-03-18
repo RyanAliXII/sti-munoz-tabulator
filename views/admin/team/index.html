@@ -9,6 +9,7 @@
           type="button"
           class="btn btn-primary"
           @click="openAddModal"
+          required-permission="Team.Create"
         >
           New team
         </button>
@@ -29,12 +30,14 @@
                   <button
                     class="btn btn-outline-primary"
                     @click="edit(team)"
+                    required-permission="Team.Edit"
                   >
                     <i class="bi bi-pen"></i>
                   </button>
                   <button
                     class="btn btn-outline-danger"
                     @click="confirmDelete(team.id)"
+                    required-permission="Team.Delete"
                   >
                     <i class="bi bi-trash"></i>
                   </button>

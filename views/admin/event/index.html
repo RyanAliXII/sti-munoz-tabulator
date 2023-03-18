@@ -10,6 +10,7 @@
             type="button"
             class="btn btn-primary"
             @click="openAddEventModal"
+            required-permission="Event.Create"
           >
             New event
           </button>
@@ -31,12 +32,14 @@
                     <button
                       class="btn btn-outline-primary"
                       @click="editEvent(event)"
+                      required-permission="Event.Edit"
                     >
                       <i class="bi bi-pen"></i>
                     </button>
                     <button
                       class="btn btn-outline-danger"
                       @click="confirmDelete($event, event.id)"
+                      required-permission="Event.DeletepA"
                     >
                       <i class="bi bi-trash"></i>
                     </button>

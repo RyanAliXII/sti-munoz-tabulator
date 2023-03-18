@@ -1,4 +1,4 @@
-import { Team, Event, Rank, Score, User, createUser } from "@models/model";
+import { Team, Event, Rank, Score, User } from "@models/model";
 import * as dotenv from "dotenv";
 import validator from "validator";
 import bycrypt from "bcrypt";
@@ -41,19 +41,20 @@ const createRootUser = async () => {
       throw "Invalid Root user email. Please enter valid email.";
     }
     const hashedPassword = await bycrypt.hash(password, 5);
-    await createUser({
-      email,
-      password: hashedPassword,
-      givenName,
-      surname,
-      permissions: permissions,
-      isRoot: true,
-    });
+    await User.upsert(
+      {
+        email,
+        password: hashedPassword,
+        givenName,
+        surname,
+        permissions: permissions,
+        isRoot: true,
+      },
+      {
+        conflictFields: ["email"],
+      }
+    );
   } catch (error) {
-    if (error instanceof ValidationError) {
-      console.log("Root user is already created.");
-      return;
-    }
     throw error;
   }
 };

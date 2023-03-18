@@ -6,7 +6,12 @@
       <div class="d-flex" style="height: 100vh">
         <%- include('../../partials/sidebar.ejs', {module: module}) %>
         <div class="container" style="margin-top: 100px">
-          <button type="button" class="btn btn-primary" @click="openAddModal">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="openAddModal"
+            required-permission="Rank.Add"
+          >
             New Rank
           </button>
 
@@ -25,11 +30,16 @@
                 <td>{{rank.points}}</td>
                 <td>
                   <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary" @click="edit(rank)">
+                    <button
+                      class="btn btn-outline-primary"
+                      @click="edit(rank)"
+                      required-permission="Rank.Edit"
+                    >
                       <i class="bi bi-pen"></i>
                     </button>
                     <button
                       class="btn btn-outline-danger"
+                      required-permission="Rank.Delete"
                       @click="confirmDelete(rank.id)"
                     >
                       <i class="bi bi-trash"></i>

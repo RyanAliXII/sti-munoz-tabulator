@@ -12,3 +12,14 @@
 ></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const accountPermissions = `<%= user.permissions %>`.split(",");
+
+  const elements = document.querySelectorAll("[required-permission]");
+  for (const element of elements) {
+    const permission = element.getAttribute("required-permission");
+    if (!accountPermissions.includes(permission)) {
+      element.remove();
+    }
+  }
+</script>

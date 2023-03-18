@@ -3,7 +3,7 @@ import { name } from "ejs";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { date, object, string } from "yup";
-import { validateJSON } from "./middewares/validate";
+import { validateJSON, validatePemissions } from "./middewares/validate";
 const router = express.Router();
 
 const Module = "Event";
@@ -19,7 +19,7 @@ const EventUpdateSchemaValidation = object().shape({
   date: date().required(),
 });
 
-router.get("/", async (req, res) => {
+router.get("/", validatePemissions(["Event.Read"]), async (req, res) => {
   try {
     if (req.headers["content-type"] === "application/json") {
       const events = (await Event.findAll()).map((e) => e.dataValues);

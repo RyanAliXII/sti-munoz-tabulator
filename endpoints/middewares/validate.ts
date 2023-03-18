@@ -30,3 +30,24 @@ export const validateJSON = (
     }
   };
 };
+
+export const validatePemissions = (requiredPermissions: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const accountPermission = req.session?.user?.permissions ?? [];
+    try {
+      for (const permission of requiredPermissions) {
+        if (!accountPermission.includes(permission)) {
+          throw "No permission found.";
+        }
+      }
+      next();
+    } catch {
+      if (req.headers["content-type"] === "application/json") {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          message: "forbidden",
+        });
+      }
+      res.render("error/403.html");
+    }
+  };
+};

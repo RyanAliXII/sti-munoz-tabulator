@@ -1,7 +1,7 @@
 import { Rank } from "@models/model";
 import express from "express";
 import { number, object, string } from "yup";
-import { validateJSON } from "./middewares/validate";
+import { validateJSON, validatePemissions } from "./middewares/validate";
 import { StatusCodes } from "http-status-codes";
 
 const Module = "Rank";
@@ -19,7 +19,7 @@ const RankUpdateSchemaValidation = object().shape({
   points: number().min(0),
 });
 
-router.get("/", async (req, res) => {
+router.get("/", validatePemissions(["Rank.Read"]), async (req, res) => {
   try {
     if (req.headers["content-type"] === "application/json") {
       const ranks = (await Rank.findAll()).map((r) => r.dataValues);

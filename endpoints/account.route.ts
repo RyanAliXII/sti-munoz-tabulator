@@ -1,7 +1,7 @@
 import { permissions } from "@internal/acl/acl";
 import express from "express";
 import { array, object, string } from "yup";
-import { validateJSON } from "./middewares/validate";
+import { validateJSON, validatePemissions } from "./middewares/validate";
 import generator from "generate-password";
 import bcrypt from "bcrypt";
 import { User } from "@models/model";
@@ -22,7 +22,7 @@ const AccountUpdateValidationSchema = object().shape({
   givenName: string().required(),
   permissions: array().of(string()).required().min(0),
 });
-router.get("/", async (req, res) => {
+router.get("/", validatePemissions(["Account.Read"]), async (req, res) => {
   if (req.headers["content-type"] == "application/json") {
     try {
       const users = await User.findAll({
