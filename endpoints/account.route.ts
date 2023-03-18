@@ -6,7 +6,7 @@ import generator from "generate-password";
 import bcrypt from "bcrypt";
 import { User } from "@models/model";
 import { StatusCodes } from "http-status-codes";
-import { json } from "body-parser";
+
 const router = express.Router();
 const Module = "Account";
 const AccountCreateValidationSchema = object().shape({
@@ -77,28 +77,33 @@ router.post(
   }
 );
 
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    User.destroy({
-      where: {
-        id: id,
-        isRoot: false,
-      },
-    });
-    return res.json({
-      message: "Account deleted.",
-    });
-  } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Account creation failed.",
-    });
+router.delete(
+  "/:id",
+  validatePemissions(["Account.Delete"]),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      User.destroy({
+        where: {
+          id: id,
+          isRoot: false,
+        },
+      });
+      return res.json({
+        message: "Account deleted.",
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Account creation failed.",
+      });
+    }
   }
-});
+);
 
 router.put(
   "/:id",
   validateJSON(AccountUpdateValidationSchema),
+  validatePemissions(["Account.Update"]),
   async (req, res) => {
     const account = req.body;
     try {

@@ -6,7 +6,7 @@
         <div class="d-flex" style="height: 100vh">
           <%- include('../../partials/sidebar.ejs', {module: module}) %>
           <div class="container" style="margin-top: 100px">
-            <button type="button" class="btn btn-primary" @click="openAddModal">
+            <button type="button" class="btn btn-primary" @click="openAddModal" required-permission="Account.Create">
                 New Account
               </button>
     
@@ -28,12 +28,13 @@
                     <td>{{account.surname}}</td>
                     <td>
                       <div class="d-flex gap-2">
-                        <button class="btn btn-outline-primary" @click="edit(account)">
+                        <button class="btn btn-outline-primary" @click="edit(account)" required-permission="Account.Update">
                           <i class="bi bi-pen"></i>
                         </button>
                         <button
                           class="btn btn-outline-danger"
                           @click="confirmDelete(account.id)"
+                          required-permission="Account.Delete"
                         >
                           <i class="bi bi-trash"></i>
                         </button>
