@@ -11,6 +11,7 @@
     "dev": "nodemon index.ts",
     "build": "tsc -p tsconfig.json && tsc-alias && npm run copy ",
     "prod": "node dist/index.js",
+    "start": "node dist/index.js",
     "copy": "copyfiles views/**/*.* assets/**/*.* dist "
   },
   "keywords": [],
