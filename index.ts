@@ -12,7 +12,7 @@ const PORT = process.env.PORT ?? 3000;
 import Session from "express-session";
 import PGSession from "connect-pg-simple";
 import pg from "pg";
-import { DB_NAME, HOST, PASSWORD, USERNAME } from "@models/sequelize";
+import { DB_NAME, DB_PORT, HOST, PASSWORD, USERNAME } from "@models/sequelize";
 import { UserType } from "@models/model";
 import loginRequired from "@endpoints/middewares/loginRequired";
 import eventRouter from "@endpoints/events.route";
@@ -33,7 +33,7 @@ const pgPool = new pg.Pool({
   host: HOST,
   user: USERNAME,
   password: PASSWORD,
-  port: 5432,
+  port: DB_PORT,
 });
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
@@ -87,6 +87,9 @@ runMigration().then(() => {
 });
 
 app.listen(PORT, () => {
-  console.log(`TypeScript with Express
-         http://localhost:${PORT}/`);
+  console.log(HOST);
+  console.log(DB_NAME);
+  console.log(USERNAME);
+  console.log(PASSWORD);
+  console.log(DB_PORT);
 });
