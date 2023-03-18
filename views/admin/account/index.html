@@ -51,6 +51,8 @@
         <%-include('./edit-account-modal.html') %>
       </main>
 </body>
+<%- include('../../partials/loader.ejs') %>
+
 <%- include('../../partials/script.ejs') %>
 
 <script>
@@ -80,6 +82,9 @@
                 editModal: null,
             }
         },
+        created(){
+          this.fetchAccounts()
+        },
         mounted(){
             this.addModal = new bootstrap.Modal(
                 document.querySelector("#addModal"),
@@ -108,9 +113,8 @@
                }
               },
               labelField: "label",
-              options:permissions.map((p)=>({label:p , value: p}))}),
-            this.fetchAccounts()
-           
+              options:permissions.map((p)=>({label:p , value: p}))})
+           hideLoader()
         },
         methods:{
           async fetchAccounts (){

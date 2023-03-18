@@ -74,7 +74,8 @@
       </div>
     </main>
   </body>
-  <%- include("../../partials/script.ejs") %>
+  <%- include("../../partials/loader.ejs") %> <%-
+  include("../../partials/script.ejs") %>
   <script>
     const { createApp } = Vue;
 
@@ -88,9 +89,12 @@
           isOverallView: true,
         };
       },
-      mounted() {
+      created() {
         this.fetchEvents();
         this.fetchRankingsOverall();
+      },
+      mounted() {
+        hideLoader();
       },
       methods: {
         async selectEvent() {

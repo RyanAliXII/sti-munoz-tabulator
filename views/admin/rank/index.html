@@ -56,6 +56,7 @@
       <%-include('./edit-rank-modal.html') %>
     </main>
   </body>
+  <%- include("../../partials/loader.ejs") %>
   <%-include("../../partials/script.ejs") %>
 
   <script>
@@ -79,6 +80,9 @@
           ranks: [],
         };
       },
+      created() {
+        this.fetchRanks();
+      },
       mounted() {
         this.addModal = new bootstrap.Modal(
           document.querySelector("#addModal"),
@@ -88,7 +92,7 @@
           document.querySelector("#editModal"),
           {}
         );
-        this.fetchRanks();
+        hideLoader();
       },
       methods: {
         async createRank() {

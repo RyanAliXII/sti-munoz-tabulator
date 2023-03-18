@@ -50,11 +50,12 @@
           </table>
         </div>
       </div>
-      <%- include('./add-event-modal.html') %> <%-
-      include('./edit-event-modal.html') %>
+      <%- include('./add-event-modal.html') %>
+      <%-include('./edit-event-modal.html') %>
     </main>
   </body>
-  <%- include('../../partials//script.ejs') %>
+  <%- include("../../partials/loader.ejs") %> <%-
+  include('../../partials//script.ejs') %>
   <script>
     const { createApp } = Vue;
 
@@ -78,8 +79,10 @@
           events: [],
         };
       },
-      mounted() {
+      created() {
         this.fetchEvents();
+      },
+      mounted() {
         this.addEventModal = new bootstrap.Modal(
           document.querySelector("#addEventModal"),
           {}
@@ -88,6 +91,7 @@
           document.querySelector("#editEventModal"),
           {}
         );
+        hideLoader();
       },
       methods: {
         async createEvent(event) {
