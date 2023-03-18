@@ -82,9 +82,17 @@ app.use("/ranks", rankRouter);
 app.use("/scores", scoreRouter);
 app.use("/leaderboards", leaderboardRouter);
 app.use("/accounts", accountRouter);
-runMigration().then(() => {
-  runSeed();
-});
+runMigration()
+  .then(async () => {
+    try {
+      await runSeed();
+    } catch (error) {
+      console.log(error);
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 app.listen(PORT, () => {
   console.log(HOST);
