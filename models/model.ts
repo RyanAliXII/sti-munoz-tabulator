@@ -12,6 +12,8 @@ export type UserType = {
   password: string;
   givenName?: string;
   surname?: string;
+  permissions: string[];
+  isRoot: true;
 };
 
 export const User = sequelize.define("user", {
@@ -27,6 +29,11 @@ export const User = sequelize.define("user", {
   password: DataTypes.STRING,
   givenName: DataTypes.STRING,
   surname: DataTypes.STRING,
+  permissions: DataTypes.JSONB,
+  isRoot: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 export const createUser = async (user: UserType) => {

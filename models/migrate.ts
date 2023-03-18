@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import validator from "validator";
 import bycrypt from "bcrypt";
 import { ValidationError } from "sequelize";
+import { permissions } from "@internal/acl/acl";
 
 const env = dotenv.config();
 
@@ -45,6 +46,8 @@ const createRootUser = async () => {
       password: hashedPassword,
       givenName,
       surname,
+      permissions: permissions,
+      isRoot: true,
     });
   } catch (error) {
     if (error instanceof ValidationError) {

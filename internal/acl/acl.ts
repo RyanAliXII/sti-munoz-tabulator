@@ -1,0 +1,15 @@
+export const permissions: string[] = [
+  "Score.Update",
+  "Team.Add",
+  "Team.Delete",
+  "Team.Update",
+  "Team.Read",
+  "Event.Read",
+  "Event.Update",
+  "Event.Delete",
+  "Event.Create",
+  "Rank.Add",
+  "Rank.Update",
+  "Rank.Delete",
+  "Rank.Read",
+];

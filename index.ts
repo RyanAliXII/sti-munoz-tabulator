@@ -20,6 +20,7 @@ import teamRouter from "@endpoints/team.route";
 import rankRouter from "@endpoints/rank.route";
 import scoreRouter from "@endpoints/score.route";
 import leaderboardRouter from "@endpoints/leaderboard.route";
+import accountRouter from "@endpoints/account.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -68,6 +69,7 @@ app.use("/teams", teamRouter);
 app.use("/ranks", rankRouter);
 app.use("/scores", scoreRouter);
 app.use("/leaderboards", leaderboardRouter);
+app.use("/accounts", accountRouter);
 app.get("/", (req, res) => {
   return res.send("TypeScript With Express");
 });
