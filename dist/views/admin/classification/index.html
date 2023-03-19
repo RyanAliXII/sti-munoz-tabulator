@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../../partials/head.ejs", {title: "Ranks"}) %>
+  <body>
+    <main id="RankApp">
+      <div class="d-flex" style="height: 100vh">
+        <%- include('../../partials/sidebar.ejs', {module: module}) %>
+        <div class="container" style="margin-top: 100px">
+          <h1>Rank Classification</h1>
+          <div class="mt-5">
+            <a
+              class="btn btn-primary"
+              href="/classifications/create"
+              style="margin-right: 5px"
+              >Create classification</a
+            >
+            <a
+              class="btn btn-secondary opacity-25"
+              style="pointer-events: none"
+              v-if="selectedClass.length === 0"
+              >Edit Selected Classification</a
+            >
+            <a
+              class="btn btn-secondary"
+              :href="'/classifications/edit/' + selectedClass"
+              v-if="selectedClass.length > 0"
+              >Edit Selected Classification</a
+            >
+          </div>
+          <div class="mt-3">
+            <select
+              class="form-select"
+              v-model="selectedClass"
+              @change="fetchClassRankings"
+            >
+              <option value="">Select Classification</option>
+              <option v-for="c in classifications" :value="c.id">
+                {{c.name}}
+              </option>
+            </select>
+          </div>
+
+          <table class="table table-bordered rounded mt-4 table-responsive">
+            <thead>
+              <tr>
+                <th scope="col">Rank name</th>
+                <th scope="col">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="rank in ranks">
+                <td>{{rank.name}}</td>
+
+                <td>{{rank.points}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr class="mt-5" />
+          <table class="table table-bordered rounded mt-4 table-responsive">
+            <thead>
+              <tr>
+                <th scope="col">Classification</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="c in classifications">
+                <td>{{c.name}}</td>
+                <td>
+                  <a
+                    class="btn btn-outline-primary"
+                    :href="'/classifications/edit/' + c.id"
+                    required-permission="Account.Update"
+                  >
+                    <i class="bi bi-pen"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </body>
+  <%- include("../../partials/loader.ejs") %>
+  <%-include("../../partials/script.ejs") %>
+
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          selectedClass: "",
+          classifications: [],
+          ranks: [],
+        };
+      },
+      created() {
+        this.fetchClassifications();
+      },
+      mounted() {
+        hideLoader();
+      },
+      methods: {
+        async fetchClassifications() {
+          try {
+            const response = await fetch("/classifications", {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const { data } = await response.json();
+            this.classifications = data?.classifications ?? [];
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async fetchClassRankings() {
+          if (this.selectedClass.length === 0) {
+            this.ranks = [];
+            return;
+          }
+          try {
+            const response = await fetch(
+              `/classifications/${this.selectedClass}/ranks`
+            );
+            const { data } = await response.json();
+            this.ranks = data.ranks;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+      },
+    }).mount("#RankApp");
+  </script>
+</html>

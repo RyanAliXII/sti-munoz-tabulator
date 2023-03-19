@@ -1,0 +1,28 @@
+<style>
+  .loader {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    background-color: #f7f5f5;
+  }
+</style>
+<div
+  class="loader d-flex justify-content-center align-items-center flex-column"
+>
+  <img src="/assets/images/pulse.svg" width="400" />
+  <h1>STI Munoz Acadweek 2023</h1>
+</div>
+
+<script>
+  const loader = document.querySelector(".loader");
+
+  const hideLoader = () => {
+    loader.classList.add("d-none");
+    loader.classList.remove("d-flex");
+  };
+  const showLoader = () => {
+    loader.classList.add("d-flex");
+    loader.classList.remove("d-none");
+  };
+</script>

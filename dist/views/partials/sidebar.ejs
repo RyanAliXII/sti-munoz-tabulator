@@ -1,0 +1,72 @@
+<div>
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height:100%">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-4">Tabulator</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+       
+          <li>
+          
+            <a href="/dashboard" class="<%= module == "Dashboard" ? 'nav-link active' : 'nav-link link-dark' %>" >
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="/events" class="<%= module == "Event" ? 'nav-link active' : 'nav-link link-dark' %>" required-permission="Event.Read">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+              Events
+            </a>
+          </li>
+
+          <li>
+            <a href="/teams" class="<%= module == "Team" ? 'nav-link active' : 'nav-link link-dark' %>" required-permission="Team.Read">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+              Teams
+            </a>
+          </li>
+          <li>
+            <a href="/classifications" class="<%= module == "Rank" ? 'nav-link active' : 'nav-link link-dark' %>" required-permission="Rank.Read">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+              Rank Classifications
+            </a>
+          </li>
+          <li>
+            <a href="/scores"  class="<%= module == "Score" ? 'nav-link active' : 'nav-link link-dark' %>" required-permission="Score.Update">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+              Score
+            </a>
+          </li>
+          <li>
+            <a href="/leaderboards" class="<%= module == "Leaderboard" ? 'nav-link active' : 'nav-link link-dark' %>">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+              Leaderboards
+            </a>
+          </li>
+          <li>
+            <a href="/accounts" class="<%= module == "Account" ? 'nav-link active' : 'nav-link link-dark' %>" required-permission="Event.Read">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+              Accounts
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong><%= user.givenName %> <%= user.surname %></strong>
+          </a>
+          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+            <!-- <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider"></li> -->
+            <li><a class="dropdown-item" href="/login">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+     
+     
+</div>

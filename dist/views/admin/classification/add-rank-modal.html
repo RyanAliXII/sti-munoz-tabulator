@@ -1,0 +1,53 @@
+<div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  aria-labelledby="addModal"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    required-permission="Rank.Create"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Create rank</h5>
+        <button type="button" class="btn-close" @click="closeAddModal"></button>
+      </div>
+      <div class="modal-body">
+        <form class="mb-2" @submit.prevent="createRank">
+          <div class="form-group">
+            <label for="name" class="mb-1">Rank name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              v-model="form.add.name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name" class="mb-1">Points</label>
+            <input
+              type="number"
+              name="points"
+              class="form-control"
+              v-model="form.add.points"
+              required
+            />
+          </div>
+          <div class="d-flex gap-2 mt-4">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              @click="closeAddModal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
