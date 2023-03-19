@@ -1,4 +1,4 @@
-import { Team, Event, Rank, Score, User } from "@models/model";
+import { Team, Event, Rank, Score, User, RankClass } from "@models/model";
 import * as dotenv from "dotenv";
 import validator from "validator";
 import bycrypt from "bcrypt";
@@ -12,6 +12,7 @@ export const runMigration = async () => {
     await User.sync();
     await Event.sync();
     await Team.sync();
+    await RankClass.sync();
     await Rank.sync();
     await Score.sync();
   } catch (error) {

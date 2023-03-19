@@ -17,7 +17,7 @@ import { UserType } from "@models/model";
 import loginRequired from "@endpoints/middewares/loginRequired";
 import eventRouter from "@endpoints/events.route";
 import teamRouter from "@endpoints/team.route";
-import rankRouter from "@endpoints/rank.route";
+import rankRouter from "@endpoints/classification.route";
 import scoreRouter from "@endpoints/score.route";
 import leaderboardRouter from "@endpoints/leaderboard.route";
 import accountRouter from "@endpoints/account.route";
@@ -66,8 +66,8 @@ app.use("/", publicRouter);
 app.use("/api/1", publicApiRouter);
 app.use("/login", loginRouter);
 
-// route registered after this statement will be affected with required login.
 app.use(loginRequired);
+// route registered after this statement is required to login to access resources.
 
 app.use((req, res, next) => {
   res.locals = {
@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 app.use("/dashboard", dashboardRouter);
 app.use("/events", eventRouter);
 app.use("/teams", teamRouter);
-app.use("/ranks", rankRouter);
+app.use("/classifications", rankRouter);
 app.use("/scores", scoreRouter);
 app.use("/leaderboards", leaderboardRouter);
 app.use("/accounts", accountRouter);

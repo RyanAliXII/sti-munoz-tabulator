@@ -16,7 +16,12 @@ export type Score = {
   rankId: string;
   additionalPoints: number;
 };
-
+export type RankType = {
+  id?: string;
+  classId: string;
+  name: string;
+  points: number;
+};
 export interface TeamScore extends Team {
   score: Score;
 }

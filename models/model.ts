@@ -112,10 +112,27 @@ export const Rank = sequelize.define("rank", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+  },
+  classId: {
+    type: DataTypes.UUID,
+    allowNull: false,
   },
   points: {
     type: DataTypes.INTEGER,
+  },
+});
+
+export const RankClass = sequelize.define("classification", {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
   },
 });
 Score.belongsTo(Event, { foreignKey: "eventId" });
@@ -125,3 +142,6 @@ Score.belongsTo(Rank, { foreignKey: "rankId" });
 Event.hasOne(Score, { foreignKey: "eventId" });
 Team.hasOne(Score, { foreignKey: "teamId" });
 Rank.hasOne(Score, { foreignKey: "rankId" });
+
+Rank.belongsTo(RankClass, { foreignKey: "classId" });
+RankClass.hasMany(Rank, { foreignKey: "classId" });
