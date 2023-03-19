@@ -1,10 +1,9 @@
-import { Rank, RankClass, Score } from "@models/model";
+import { Rank, RankClass } from "@models/model";
 import express from "express";
 import { array, number, object, string } from "yup";
 import { validateJSON, validatePemissions } from "./middewares/validate";
 import { StatusCodes } from "http-status-codes";
 import { RankType } from "@definitions/types";
-import { Model } from "sequelize";
 
 const Module = "Rank";
 
