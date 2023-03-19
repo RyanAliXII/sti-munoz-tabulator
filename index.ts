@@ -22,6 +22,7 @@ import scoreRouter from "@endpoints/score.route";
 import leaderboardRouter from "@endpoints/leaderboard.route";
 import accountRouter from "@endpoints/account.route";
 import publicApiRouter from "@endpoints/api.route";
+import publicRouter from "@endpoints/public.route";
 declare module "express-session" {
   interface SessionData {
     user: UserType;
@@ -61,11 +62,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/assets", express.static("assets"));
+app.use("/", publicRouter);
 app.use("/api/1", publicApiRouter);
 app.use("/login", loginRouter);
-app.get("/", (req, res) => {
-  return res.send("TypeScript With Express");
-});
+
 // route registered after this statement will be affected with required login.
 app.use(loginRequired);
 
