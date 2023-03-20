@@ -22,7 +22,7 @@
               v-model="form.classId"
               @change="selectRankClass"
             >
-              <option value="">Select ranking classification</option>
+              <option value="">Select event ranking classification</option>
               <option v-for="c in rankClasses" :value="c.id">{{c.name}}</option>
             </select>
             <table
