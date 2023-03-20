@@ -33,7 +33,7 @@ const UpdateClassificationSchemaValidation = object().shape({
     )
     .min(1),
 });
-router.get("/", validatePemissions(["Rank.Read"]), async (req, res) => {
+router.get("/", validatePemissions(["Class.Read"]), async (req, res) => {
   try {
     if (req.headers["content-type"] === "application/json") {
       const rankClasses = await RankClass.findAll({
@@ -64,36 +64,40 @@ router.get("/", validatePemissions(["Rank.Read"]), async (req, res) => {
     return res.render("admin/classification/index.html", { module: Module });
   }
 });
-router.get("/create", (req, res) => {
+router.get("/create", validatePemissions(["Class.Create"]), (req, res) => {
   return res.render("admin/classification/create-class.html", {
     module: Module,
   });
 });
 
-router.get("/edit/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const rankClass = await RankClass.findOne({
-      attributes: ["id", "name"],
-      where: {
-        id: id,
-      },
-      include: [
-        {
-          attributes: ["id", "name", "points"],
-          model: Rank,
+router.get(
+  "/edit/:id",
+  validatePemissions(["Class.Update"]),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const rankClass = await RankClass.findOne({
+        attributes: ["id", "name"],
+        where: {
+          id: id,
         },
-      ],
-    });
-    console.log(rankClass);
-    return res.render("admin/classification/edit-class.html", {
-      module: Module,
-      classification: rankClass?.dataValues,
-    });
-  } catch {
-    return res.render("error/404.html");
+        include: [
+          {
+            attributes: ["id", "name", "points"],
+            model: Rank,
+          },
+        ],
+      });
+      console.log(rankClass);
+      return res.render("admin/classification/edit-class.html", {
+        module: Module,
+        classification: rankClass?.dataValues,
+      });
+    } catch {
+      return res.render("error/404.html");
+    }
   }
-});
+);
 
 router.get("/", async (req, res) => {
   try {
@@ -135,6 +139,7 @@ router.get("/:id/ranks", async (req, res) => {
 
 router.put(
   "/:id",
+  validatePemissions(["Class.Update"]),
   validateJSON(UpdateClassificationSchemaValidation),
   async (req, res) => {
     const rankClass = req.body;
@@ -168,6 +173,7 @@ router.put(
 );
 router.post(
   "/",
+  validatePemissions(["Class.Create"]),
   validateJSON(CreateClassificationSchemaValidation),
   async (req, res) => {
     try {
