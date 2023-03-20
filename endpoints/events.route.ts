@@ -21,24 +21,30 @@ const EventUpdateSchemaValidation = object().shape({
 
 router.get("/", validatePemissions(["Event.Read"]), async (req, res) => {
   try {
-    if (req.headers["content-type"] === "application/json") {
-      const events = (await Event.findAll()).map((e) => e.dataValues);
-      return res.json({ data: { events: events } });
-    }
-    res.render("admin/event/index.html", {
-      module: Module,
+    const events = await Event.findAll({
+      attributes: ["id", "name", "date"],
     });
-  } catch (error) {
-    console.error(error);
     if (req.headers["content-type"] === "application/json") {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Unknown error occured",
+      return res.json({
+        message: "Events fetched",
         data: {
-          events: [],
+          events: events,
         },
       });
     }
-    return res.render("admin/event/index.html", {
+    res.render("admin/event/index.html", {
+      module: Module,
+      events: events?.map((e) => e.dataValues) ?? [],
+    });
+  } catch (error) {
+    if (req.headers["content-type"] === "application/json") {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Events fetched",
+        data: {},
+      });
+    }
+
+    return res.render("error/500.html", {
       module: Module,
     });
   }

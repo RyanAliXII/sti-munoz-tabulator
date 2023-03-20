@@ -1,4 +1,4 @@
-import { Event, Rank, Score, Team } from "@models/model";
+import { Event, Rank, RankClass, Score, Team } from "@models/model";
 import { TeamScore, EventType } from "definitions/types";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
@@ -49,7 +49,7 @@ router.post(
           eventId: scores.event.id,
           teamId: team.id,
           rankId: team.score.rankId,
-          additionalPoints: team.score.additionalPoints,
+          additionalPoints: team?.score?.additionalPoints ?? 0,
         };
       });
       const parsedData = await ScoreValidationSchema.validate(data);
@@ -66,47 +66,80 @@ router.post(
     }
   }
 );
-router.get("/events/:eventId/teams",  validatePemissions(["Score.Update"]), async (req, res) => {
-  const { eventId } = req.params;
-  try {
-    const data = await Team.findAll({
-      attributes: ["id", "name"],
-      include: {
-        model: Score,
-        where: {
-          eventId: eventId,
+router.get(
+  "/events/:eventId/teams",
+  validatePemissions(["Score.Update"]),
+  async (req, res) => {
+    const { eventId } = req.params;
+    try {
+      const data = await Team.findAll({
+        attributes: ["id", "name"],
+        include: {
+          model: Score,
+          where: {
+            eventId: eventId,
+          },
+          attributes: ["id", "eventId", "teamId", "rankId", "additionalPoints"],
+          include: [
+            {
+              model: Rank,
+              attributes: ["id", "points", "name", "classId"],
+              include: [
+                {
+                  model: RankClass,
+                  attributes: ["id", "name"],
+                  include: [
+                    {
+                      model: Rank,
+                      attributes: ["id", "points", "name"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          required: false,
         },
-        attributes: ["id", "eventId", "teamId", "rankId", "additionalPoints"],
-        required: false,
-      },
-    });
-    const teams = data.map((d) => {
-      const score = d.dataValues.score;
-      if (score) {
-        d.dataValues.score = d.dataValues.score.dataValues;
-      } else {
-        d.dataValues.score = {
-          id: "",
-          additionalPoints: 0,
-          eventId: "",
-          teamId: "",
-          rankId: "",
-        };
-      }
-      return d.dataValues;
-    });
-    return res.json({
-      message: "events fetched with scores and teams.",
-      data: {
-        teams,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Unknown error occured", data: {} });
+      });
+      const teams = data.map((d) => {
+        const score = d.dataValues.score;
+        if (score) {
+          d.dataValues.score = d.dataValues.score.dataValues;
+        } else {
+          d.dataValues.score = {
+            id: "",
+            additionalPoints: 0,
+            eventId: "",
+            teamId: "",
+            rankId: "",
+            rank: {
+              id: "",
+              points: "",
+              name: "",
+              classId: "",
+              classification: {
+                id: "",
+                name: "",
+                ranks: [],
+              },
+            },
+          };
+        }
+        return d.dataValues;
+      });
+      return res.json({
+        message: "events fetched with scores and teams.",
+        data: {
+          teams,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Unknown error occured", data: {} });
+    }
   }
-});
+);
 
 export default router;

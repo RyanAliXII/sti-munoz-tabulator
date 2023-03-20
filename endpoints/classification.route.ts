@@ -38,6 +38,12 @@ router.get("/", validatePemissions(["Rank.Read"]), async (req, res) => {
     if (req.headers["content-type"] === "application/json") {
       const rankClasses = await RankClass.findAll({
         attributes: ["id", "name"],
+        include: [
+          {
+            model: Rank,
+            attributes: ["id", "name", "points"],
+          },
+        ],
       });
       return res.json({
         message: "Classifications fetched.",
