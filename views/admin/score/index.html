@@ -17,7 +17,14 @@
                 {{event.name}}
               </option>
             </select>
-
+            <select
+              class="form-select mt-2"
+              v-model="form.classId"
+              @change="selectRankClass"
+            >
+              <option value="">Select ranking classification</option>
+              <option v-for="c in rankClasses" :value="c.id">{{c.name}}</option>
+            </select>
             <table
               v-if="form.teams.length > 0"
               class="table table-bordered rounded mt-4 table-responsive"
@@ -77,23 +84,30 @@
       </div>
     </main>
   </body>
-  <%- include("../../partials/script.ejs") %>
+  <%- include("../../partials//loader.ejs") %> <%-
+  include("../../partials/script.ejs") %>
   <script>
     const { createApp } = Vue;
     createApp({
       data() {
         return {
           events: [],
+          rankClasses: [],
+          rankClassesMap: {},
           ranks: [],
           form: {
             event: { id: "", name: "" },
             teams: [],
+            classId: "",
+            rankId: "",
           },
         };
       },
       mounted() {
         this.fetchEvents();
-        this.fetchRanks();
+        this.fetchRankingClassifications();
+
+        hideLoader();
       },
       methods: {
         async fetchEvents() {
@@ -104,23 +118,30 @@
             });
             const { data } = await response.json();
             this.events = data?.events ?? [];
-          } catch {}
+          } catch (error) {
+            console.log(error);
+          }
         },
-
-        async fetchRanks() {
+        async fetchRankingClassifications() {
           try {
-            const response = await fetch("/ranks", {
+            const response = await fetch("/classifications", {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
               },
             });
+
             const { data } = await response.json();
-            this.ranks = data?.ranks ?? [];
-          } catch {
-            this.ranks = [];
+            this.rankClasses = data.classifications;
+            this.rankClassesMap = data?.classifications.reduce(
+              (a, c) => ({ ...a, [c.id]: c }),
+              {}
+            );
+          } catch (error) {
+            console.log(error);
           }
         },
+
         async fetchTeamAndScoresByEventId() {
           if (this.form.event.id.length === 0) {
             return;
@@ -136,11 +157,22 @@
               }
             );
             const { data } = await response.json();
-            console.log(data);
+            if (data?.teams) {
+              if (data?.teams.length > 0) {
+                this.form.classification =
+                  data?.teams[0].score.rank.classification;
+                this.form.classId = data?.teams[0].score.rank.classification.id;
+                this.ranks = data?.teams[0].score.rank.classification.ranks;
+              }
+            }
             this.form.teams = data?.teams ?? [];
           } catch {
             this.ranks = [];
           }
+        },
+
+        selectRankClass() {
+          this.ranks = this.rankClassesMap[this.form.classId].ranks;
         },
         async submitScores() {
           try {
@@ -164,7 +196,8 @@
               return;
             }
             throw "score did not submit.";
-          } catch {
+          } catch (error) {
+            console.log(error);
             Swal.fire(
               "Error",
               `Unknown error occured while submitting score for ${this.form.event.name} event.`,

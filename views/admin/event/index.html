@@ -58,7 +58,7 @@
   include('../../partials//script.ejs') %>
   <script>
     const { createApp } = Vue;
-
+    const events = JSON.parse(`<%- JSON.stringify(events) %>`);
     createApp({
       data() {
         return {
@@ -76,7 +76,7 @@
           },
           addEventModal: null,
           editEventModal: null,
-          events: [],
+          events: events ?? [],
         };
       },
       created() {
