@@ -12,11 +12,13 @@
               class="btn btn-primary"
               href="/classifications/create"
               style="margin-right: 5px"
+              required-permission="Class.Create"
               >Create classification</a
             >
             <a
               class="btn btn-secondary opacity-25"
               style="pointer-events: none"
+              required-permission="Class.Update"
               v-if="selectedClass.length === 0"
               >Edit Selected Classification</a
             >

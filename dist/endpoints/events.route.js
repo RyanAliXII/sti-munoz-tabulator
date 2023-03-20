@@ -29,26 +29,32 @@ const EventUpdateSchemaValidation = (0, yup_1.object)().shape({
     date: (0, yup_1.date)().required(),
 });
 router.get("/", (0, validate_1.validatePemissions)(["Event.Read"]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        if (req.headers["content-type"] === "application/json") {
-            const events = (yield model_1.Event.findAll()).map((e) => e.dataValues);
-            return res.json({ data: { events: events } });
-        }
-        res.render("admin/event/index.html", {
-            module: Module,
+        const events = yield model_1.Event.findAll({
+            attributes: ["id", "name", "date"],
         });
-    }
-    catch (error) {
-        console.error(error);
         if (req.headers["content-type"] === "application/json") {
-            return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({
-                message: "Unknown error occured",
+            return res.json({
+                message: "Events fetched",
                 data: {
-                    events: [],
+                    events: events,
                 },
             });
         }
-        return res.render("admin/event/index.html", {
+        res.render("admin/event/index.html", {
+            module: Module,
+            events: (_a = events === null || events === void 0 ? void 0 : events.map((e) => e.dataValues)) !== null && _a !== void 0 ? _a : [],
+        });
+    }
+    catch (error) {
+        if (req.headers["content-type"] === "application/json") {
+            return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: "Events fetched",
+                data: {},
+            });
+        }
+        return res.render("error/500.html", {
             module: Module,
         });
     }

@@ -46,11 +46,12 @@ router.post("/events", (0, validate_1.validatePemissions)(["Score.Update"]), (re
     try {
         const scores = req.body;
         const data = (_a = scores.teams) === null || _a === void 0 ? void 0 : _a.map((team) => {
+            var _a, _b;
             return {
                 eventId: scores.event.id,
                 teamId: team.id,
                 rankId: team.score.rankId,
-                additionalPoints: team.score.additionalPoints,
+                additionalPoints: (_b = (_a = team === null || team === void 0 ? void 0 : team.score) === null || _a === void 0 ? void 0 : _a.additionalPoints) !== null && _b !== void 0 ? _b : 0,
             };
         });
         const parsedData = yield ScoreValidationSchema.validate(data);
@@ -78,6 +79,24 @@ router.get("/events/:eventId/teams", (0, validate_1.validatePemissions)(["Score.
                     eventId: eventId,
                 },
                 attributes: ["id", "eventId", "teamId", "rankId", "additionalPoints"],
+                include: [
+                    {
+                        model: model_1.Rank,
+                        attributes: ["id", "points", "name", "classId"],
+                        include: [
+                            {
+                                model: model_1.RankClass,
+                                attributes: ["id", "name"],
+                                include: [
+                                    {
+                                        model: model_1.Rank,
+                                        attributes: ["id", "points", "name"],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
                 required: false,
             },
         });
@@ -93,6 +112,17 @@ router.get("/events/:eventId/teams", (0, validate_1.validatePemissions)(["Score.
                     eventId: "",
                     teamId: "",
                     rankId: "",
+                    rank: {
+                        id: "",
+                        points: "",
+                        name: "",
+                        classId: "",
+                        classification: {
+                            id: "",
+                            name: "",
+                            ranks: [],
+                        },
+                    },
                 };
             }
             return d.dataValues;

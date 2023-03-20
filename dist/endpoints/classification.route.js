@@ -38,11 +38,17 @@ const UpdateClassificationSchemaValidation = (0, yup_1.object)().shape({
     }))
         .min(1),
 });
-router.get("/", (0, validate_1.validatePemissions)(["Rank.Read"]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", (0, validate_1.validatePemissions)(["Class.Read"]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.headers["content-type"] === "application/json") {
             const rankClasses = yield model_1.RankClass.findAll({
                 attributes: ["id", "name"],
+                include: [
+                    {
+                        model: model_1.Rank,
+                        attributes: ["id", "name", "points"],
+                    },
+                ],
             });
             return res.json({
                 message: "Classifications fetched.",
@@ -64,12 +70,12 @@ router.get("/", (0, validate_1.validatePemissions)(["Rank.Read"]), (req, res) =>
         return res.render("admin/classification/index.html", { module: Module });
     }
 }));
-router.get("/create", (req, res) => {
+router.get("/create", (0, validate_1.validatePemissions)(["Class.Create"]), (req, res) => {
     return res.render("admin/classification/create-class.html", {
         module: Module,
     });
 });
-router.get("/edit/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/edit/:id", (0, validate_1.validatePemissions)(["Class.Update"]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
         const rankClass = yield model_1.RankClass.findOne({
@@ -132,7 +138,7 @@ router.get("/:id/ranks", (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({});
     }
 }));
-router.put("/:id", (0, validate_1.validateJSON)(UpdateClassificationSchemaValidation), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", (0, validate_1.validatePemissions)(["Class.Update"]), (0, validate_1.validateJSON)(UpdateClassificationSchemaValidation), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const rankClass = req.body;
     console.log(rankClass);
     try {
@@ -157,7 +163,7 @@ router.put("/:id", (0, validate_1.validateJSON)(UpdateClassificationSchemaValida
         return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({});
     }
 }));
-router.post("/", (0, validate_1.validateJSON)(CreateClassificationSchemaValidation), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", (0, validate_1.validatePemissions)(["Class.Create"]), (0, validate_1.validateJSON)(CreateClassificationSchemaValidation), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const classification = req.body;
         const data = yield model_1.RankClass.create({
