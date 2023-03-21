@@ -2,10 +2,262 @@
 <html lang="en">
   <%- include('../partials/head.ejs', {title: "Dashboard"}) %>
   <body>
-    <div class="d-flex" style="height: 100vh">
-      <%- include('../partials/sidebar.ejs', {module: module}) %>
-      <div class="content"></div>
-    </div>
+    <main id="DashboardApp">
+      <div class="d-flex" style="height: 100vh">
+        <%- include('../partials/sidebar.ejs', {module: module}) %>
+        <div class="container" style="margin-top: 5rem">
+          <div class="d-flex gap-3">
+            <div class="card" style="width: 15rem">
+              <a
+                href="/events"
+                class="card-body d-flex align-items-center gap-4 text-decoration-none"
+              >
+                <i class="bi bi-calendar-event" style="font-size: 1.5rem"></i>
+                <div>
+                  <h5 class="card-title">Event</h5>
+                  <h5 class="card-subtitle text-secondary">{{eventCount}}</h5>
+                </div>
+              </a>
+            </div>
+            <div class="card" style="width: 15rem">
+              <a
+                href="/teams"
+                class="card-body d-flex align-items-center gap-4 text-decoration-none"
+              >
+                <i class="bi bi-unity" style="font-size: 1.5rem"></i>
+                <div>
+                  <h5 class="card-title">Team</h5>
+                  <h5 class="card-subtitle text-secondary text">
+                    {{teamCount}}
+                  </h5>
+                </div>
+              </a>
+            </div>
+            <div class="card" style="width: 15rem">
+              <a
+                href="/classifications"
+                class="card-body d-flex align-items-center gap-4 text-decoration-none"
+              >
+                <i class="bi bi-diagram-3" style="font-size: 1.5rem"></i>
+                <div>
+                  <h5 class="card-title">Classifcation</h5>
+                  <h5 class="card-subtitle text-secondary">{{classCount }}</h5>
+                </div>
+              </a>
+            </div>
+            <div class="card" style="width: 15rem">
+              <a
+                href="/accounts"
+                class="card-body d-flex align-items-center gap-4 text-decoration-none"
+              >
+                <i class="bi bi-person-circle" style="font-size: 1.5rem"></i>
+                <div>
+                  <h5 class="card-title">Account</h5>
+                  <h5 class="card-subtitle text-secondary">
+                    {{accountCount }}
+                  </h5>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div>
+            <select
+              class="form-select mt-5"
+              v-model="selectedEvent"
+              @change="selectEvent"
+            >
+              <option
+                v-for="(event, index) in events"
+                :value="event"
+                :selected="index === 0 ? true : false"
+              >
+                {{ event.name}}
+              </option>
+            </select>
+            <canvas id="rankingChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
   <%- include('../partials/script.ejs') %>
+  <script>
+    const { createApp, shallowRef } = Vue;
+
+    createApp({
+      mounted() {
+        this.initRankingCharts();
+      },
+      created() {
+        this.fetchEvents();
+        this.fetchTeams();
+        this.fetchClassifications();
+        this.fetchAccounts();
+      },
+      data() {
+        const overallEvent = {
+          id: "overall",
+          name: "Overall",
+        };
+        return {
+          eventCount: 0,
+          teamCount: 0,
+          classCount: 0,
+          accountCount: 0,
+          chart: null,
+          events: [overallEvent],
+          selectedEvent: overallEvent,
+        };
+      },
+      methods: {
+        async fetchEvents() {
+          try {
+            const response = await fetch("/api/1/events", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+            this.events = [...this.events, ...(data?.events ?? [])];
+            this.eventCount = data?.events?.length ?? 0;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async fetchTeams() {
+          try {
+            const response = await fetch("/api/1/teams", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+
+            this.teamCount = data?.teams?.length ?? 0;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async fetchClassifications() {
+          try {
+            const response = await fetch("/classifications", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+            this.classCount = data?.classifications?.length ?? 0;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async fetchAccounts() {
+          try {
+            const response = await fetch("/accounts", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+            this.accountCount = data?.accounts?.length ?? 0;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async selectEvent() {
+          if (this.selectedEvent.id === "overall") {
+            const overall = await this.fetchOverall();
+            this.chart.data.labels = overall.map((score) => score.team.name);
+            this.chart.data.datasets[0].label = this.selectedEvent.name;
+            this.chart.data.datasets[0].data = overall.map(
+              (score) => score.totalPoints
+            );
+            this.chart.update();
+            return;
+          }
+
+          const leaderboard = await this.fetchScoreByEventId(
+            this.selectedEvent.id
+          );
+
+          this.chart.data.labels = leaderboard.map((t) => t.name);
+          this.chart.data.datasets[0].label = this.selectedEvent.name;
+
+          this.chart.data.datasets[0].data = leaderboard.map(
+            (t) => t?.score?.totalPoints ?? 0
+          );
+          this.chart.update();
+        },
+        async fetchScoreByEventId(id) {
+          try {
+            const response = await fetch(`/api/1/leaderboard/events/${id}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+            return data?.leaderboard ?? [];
+            console.log(data);
+          } catch (error) {
+            console.log(error);
+            return [];
+          }
+        },
+        async fetchOverall() {
+          try {
+            const response = await fetch("/api/1/leaderboard/overall", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json ",
+              },
+            });
+            const { data } = await response.json();
+            return data?.scores;
+            console.log(data);
+          } catch (error) {
+            console.log(error);
+            return [];
+          }
+        },
+        async initRankingCharts() {
+          const ctx = document.getElementById("rankingChart");
+          const scores = await this.fetchOverall();
+          this.chart = shallowRef(
+            new Chart(ctx, {
+              type: "bar",
+
+              data: {
+                labels: scores.map((score) => score.team.name),
+                datasets: [
+                  {
+                    label: "Overall",
+                    data: scores.map((score) => score.totalPoints),
+                    backgroundColor: ["#0072BC", "#FFF200"],
+                    borderWidth: 1,
+                  },
+                ],
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                  },
+                },
+              },
+            })
+          );
+        },
+      },
+      beforeDestroy() {
+        if (this.chart) {
+          this.chart.destroy();
+        }
+      },
+    }).mount("#DashboardApp");
+  </script>
 </html>
