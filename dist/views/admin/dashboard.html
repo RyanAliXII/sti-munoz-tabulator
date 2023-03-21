@@ -80,13 +80,17 @@
       </div>
     </main>
   </body>
-  <%- include('../partials/script.ejs') %>
+  <%- include('../partials/script.ejs') %> <%- include('../partials/loader.ejs')
+  %>
   <script>
     const { createApp, shallowRef } = Vue;
 
     createApp({
       mounted() {
         this.initRankingCharts();
+        setTimeout(() => {
+          hideLoader();
+        }, 500);
       },
       created() {
         this.fetchEvents();
