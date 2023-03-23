@@ -3,9 +3,10 @@
 <%- include("../../partials/head.ejs", {title: "Account"}) %>
 <body>
     <main id="AccountApp">
-        <div class="d-flex" style="height: 100vh">
+      <%- include('../../partials/header.ejs', {module: module}) %>
+        <div class="d-flex mt-lg-5">
           <%- include('../../partials/sidebar.ejs', {module: module}) %>
-          <div class="container" style="margin-top: 100px">
+          <div class="container mt-lg-5">
             <button type="button" class="btn btn-primary" @click="openAddModal" required-permission="Account.Create">
                 New Account
               </button>
@@ -51,6 +52,7 @@
         <%-include('./edit-account-modal.html') %>
       </main>
 </body>
+<%- include('../../partials/mobile-sidebar.ejs', {module: module}) %>
 <%- include('../../partials/loader.ejs') %>
 
 <%- include('../../partials/script.ejs') %>

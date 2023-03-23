@@ -3,9 +3,10 @@
   <%- include("../../partials/head.ejs", {title: "Score"}) %>
   <body>
     <main id="ScoreApp">
+      <%- include("../../partials/header.ejs") %>
       <div class="d-flex" style="height: 100vh">
         <%- include("../../partials//sidebar.ejs", {module: module}) %>
-        <div class="container" style="margin-top: 100px">
+        <div class="container mt-lg-5">
           <div class="form-group">
             <select
               class="form-select"
@@ -84,7 +85,8 @@
       </div>
     </main>
   </body>
-  <%- include("../../partials//loader.ejs") %> <%-
+  <%- include("../../partials/mobile-sidebar.ejs") %> <%-
+  include("../../partials//loader.ejs") %> <%-
   include("../../partials/script.ejs") %>
   <script>
     const { createApp } = Vue;
