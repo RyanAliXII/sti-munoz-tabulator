@@ -137,7 +137,7 @@ router.get("/leaderboard/events/:eventId", (req, res) => __awaiter(void 0, void 
                     [
                         sequelize_1.default.literal(`
                  ( DENSE_RANK () OVER ( 
-                      ORDER BY ("score->rank".points + "score"."additionalPoints") DESC
+                      ORDER BY (COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)) DESC
                   ))`),
                         "position",
                     ],
@@ -148,7 +148,7 @@ router.get("/leaderboard/events/:eventId", (req, res) => __awaiter(void 0, void 
         return res.json({
             message: "Scores fetched with teams grouped by event.",
             data: {
-                leaderboard: data.map((d) => d.dataValues),
+                teams: data.map((d) => d.dataValues),
             },
         });
     }
@@ -159,7 +159,7 @@ router.get("/leaderboard/events/:eventId", (req, res) => __awaiter(void 0, void 
             .json({ message: "Unknown error occured", data: {} });
     }
 }));
-router.get("/leaderboard/teams/:teamId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/leaderboard/teams/:teamId/events", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { teamId } = req.params;
     try {
@@ -195,7 +195,7 @@ router.get("/leaderboard/teams/:teamId", (req, res) => __awaiter(void 0, void 0,
                     [
                         sequelize_1.default.literal(`
                    ( DENSE_RANK () OVER ( 
-                        ORDER BY ("score->rank".points + "score"."additionalPoints") DESC
+                        ORDER BY (COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)) DESC
                     ))`),
                         "position",
                     ],
@@ -205,7 +205,7 @@ router.get("/leaderboard/teams/:teamId", (req, res) => __awaiter(void 0, void 0,
         return res.json({
             message: "Scores fetched with event grouped by team.",
             data: {
-                leaderboard: (_a = data.map((d) => d.dataValues)) !== null && _a !== void 0 ? _a : [],
+                events: (_a = data.map((d) => d.dataValues)) !== null && _a !== void 0 ? _a : [],
             },
         });
     }
@@ -248,7 +248,6 @@ router.get("/leaderboard/overall", (req, res) => __awaiter(void 0, void 0, void 
             ],
             group: ["team.id"],
         });
-        console.log(scores);
         return res.json({
             message: "Teams overall scores fetched.",
             data: {
