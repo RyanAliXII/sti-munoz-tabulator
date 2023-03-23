@@ -38,14 +38,14 @@ router.get("/:eventId", async (req, res) => {
           "additionalPoints",
           [
             sequelize.literal(
-              `("score->rank".points + "score"."additionalPoints")`
+              `COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)`
             ),
             "totalPoints",
           ],
           [
             sequelize.literal(`
                ( DENSE_RANK () OVER ( 
-                    ORDER BY ("score->rank".points + "score"."additionalPoints") DESC
+                    ORDER BY (COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)) DESC
                 ))`),
             "position",
           ],

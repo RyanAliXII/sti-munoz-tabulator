@@ -129,7 +129,7 @@ router.get("/leaderboard/events/:eventId", async (req, res) => {
           [
             sequelize.literal(`
                  ( DENSE_RANK () OVER ( 
-                      ORDER BY ("score->rank".points + "score"."additionalPoints") DESC
+                      ORDER BY (COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)) DESC
                   ))`),
             "position",
           ],
@@ -141,7 +141,7 @@ router.get("/leaderboard/events/:eventId", async (req, res) => {
     return res.json({
       message: "Scores fetched with teams grouped by event.",
       data: {
-        leaderboard: data.map((d) => d.dataValues),
+        teams: data.map((d) => d.dataValues),
       },
     });
   } catch (error) {
@@ -152,7 +152,7 @@ router.get("/leaderboard/events/:eventId", async (req, res) => {
   }
 });
 
-router.get("/leaderboard/teams/:teamId", async (req, res) => {
+router.get("/leaderboard/teams/:teamId/events", async (req, res) => {
   const { teamId } = req.params;
   try {
     const data = await Event.findAll({
@@ -190,7 +190,7 @@ router.get("/leaderboard/teams/:teamId", async (req, res) => {
           [
             sequelize.literal(`
                    ( DENSE_RANK () OVER ( 
-                        ORDER BY ("score->rank".points + "score"."additionalPoints") DESC
+                        ORDER BY (COALESCE("score->rank".points, 0) + COALESCE("score"."additionalPoints", 0)) DESC
                     ))`),
             "position",
           ],
@@ -200,7 +200,7 @@ router.get("/leaderboard/teams/:teamId", async (req, res) => {
     return res.json({
       message: "Scores fetched with event grouped by team.",
       data: {
-        leaderboard: data.map((d) => d.dataValues) ?? [],
+        events: data.map((d) => d.dataValues) ?? [],
       },
     });
   } catch (error) {
@@ -246,7 +246,7 @@ router.get("/leaderboard/overall", async (req, res) => {
       ],
       group: ["team.id"],
     });
-    console.log(scores);
+
     return res.json({
       message: "Teams overall scores fetched.",
       data: {
