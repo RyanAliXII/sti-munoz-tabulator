@@ -4,7 +4,7 @@
 <body>
     <main id="AccountApp">
       <%- include('../../partials/header.ejs', {module: module}) %>
-        <div class="d-flex mt-lg-5">
+        <div class="d-flex" style="height: 100vh">
           <%- include('../../partials/sidebar.ejs', {module: module}) %>
           <div class="container mt-lg-5">
             <button type="button" class="btn btn-primary" @click="openAddModal" required-permission="Account.Create">
