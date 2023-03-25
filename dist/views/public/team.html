@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E - BENTO</title>
+    <title>Acadweek 2023</title>
     
     <!-- Google Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
@@ -57,7 +57,7 @@
                           <li><a href="t nalak.html">T NALAK</a></li>
                       </ul>
                   </li>
-                  <li><a href="../photogallery.html">Photogallery</a></li>
+                  <!-- <li><a href="../photogallery.html">Photogallery</a></li> -->
                 </ul>                                                     
               </div>
             </nav>
@@ -94,18 +94,18 @@
                             <h5>List of Events:</h5>
                           <h6>Major Events</h6> -->
                             <table class="teams_table">
-                                <thead>
+                                <thead >
                                   <tr>
-                                    <th id="">Event Name</th>
-                                    <th id="">Score</th>
+                                    <th id="" style="font-size: 1.8rem;">Event Name</th>
+                                    <th id="" style="font-size: 1.8rem;">Score</th>
                                   </tr>
                                 </thead>
                                 <tbody>
 
                                   <% events.forEach((event)=>{ %>
                                     <tr>
-                                    <td id=""><%= event.name %></td>
-                                    <td id=""><%= event.score?.totalPoints ?? 0 %></td>
+                                    <td id="" style="font-size: 1.5rem;"><%= event.name %></td>
+                                    <td id="" style="font-size: 1.5rem;"><%= event.score?.totalPoints ?? 0 %></td>
                                      </tr>
                                     <% }) %>
                                   <!-- <tr>
@@ -153,73 +153,13 @@
         </div>
     </section>
     <section class="footer-top-area section-padding">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-3 col-sm-6">
-                  <div class="footer-widget">
-                      <h1 class="site-title">Academic Week 2023</h1>
-                      <p>Description</p>                   
-                  </div>
-              </div>
-              
-              <div class="col-md-3 col-sm-6">
-                  <div class="footer-widget">
-                      <h2 class="wid-title">Contributors</h2>
-                      <ul>
-                          <li>Oliveros</li>
-                          <li>Alberto</li>
-                          <li>Ali</li>
-                          <li>Lape</li>
-                      </ul>
-                  </div>
-              </div>
-              
-              <div class="col-md-3 col-sm-6">
-                  <div class="footer-widget">
-                      <h2 class="wid-title">Affiliation</h2>
-                      <ul>
-                        <li>Knight Club</li>
-                        <li>Events and Media Committee</li>
-                        <li>STI College Munoz-EDSA</li>
-                    </ul>
-                  </div>
-              </div>
-              
-              <div class="col-md-3 col-sm-6">
-                  <div class="footer-widget">
-                      <h2 class="wid-title">Contact Us!</h2>
-                      <h4>Knight Club</h4>
-                      <p><strong>Phone:</strong> - </p>
-                      <p><strong>Email:</strong> - </p>
-                  </div>
-              </div>
-          </div>
-      </div>
+    
   </section>
 </main>
     <!--
             style - style.css
     -->
-    <footer class="footer">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-7">
-                  <div class="footer-association">
-                      <p>@ Knight Club <span class="seprator">|</span> Events and Media Committee</p>
-                  </div>
-              </div>
-              
-              <div class="col-md-5">
-                  <nav class="footer-menu">
-                      <ul>
-                          <li><a href="https://web.facebook.com" target="_blank">Facebook Page</a></li>
-                          <li><a href="https://discord.gg/YjXzUCQkfB" target="_blank">Join Us!</a></li>
-                      </ul>
-                  </nav>
-              </div>
-          </div>            
-      </div>
-    </footer>
+    <%- include("../partials/footer.ejs") %>
     
     <!-- jQuery and plugins -->
     <script src="/assets/js/vendor/jquery.1.11.1.js"></script>
