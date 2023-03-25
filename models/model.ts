@@ -46,7 +46,7 @@ export const Score = sequelize.define(
       primaryKey: true,
     },
     additionalPoints: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 0,
     },
     eventId: {
@@ -118,7 +118,7 @@ export const Rank = sequelize.define("rank", {
     allowNull: false,
   },
   points: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.DECIMAL(10, 2),
   },
 });
 

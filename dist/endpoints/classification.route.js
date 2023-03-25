@@ -24,7 +24,7 @@ const CreateClassificationSchemaValidation = (0, yup_1.object)().shape({
     ranks: (0, yup_1.array)()
         .of((0, yup_1.object)().shape({
         name: (0, yup_1.string)().required(),
-        points: (0, yup_1.number)().integer().min(0),
+        points: (0, yup_1.number)().min(0),
     }))
         .min(1),
 });
@@ -34,7 +34,7 @@ const UpdateClassificationSchemaValidation = (0, yup_1.object)().shape({
     ranks: (0, yup_1.array)()
         .of((0, yup_1.object)().shape({
         name: (0, yup_1.string)().required(),
-        points: (0, yup_1.number)().integer().min(0),
+        points: (0, yup_1.number)().min(0),
     }))
         .min(1),
 });

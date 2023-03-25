@@ -15,7 +15,7 @@ const CreateClassificationSchemaValidation = object().shape({
     .of(
       object().shape({
         name: string().required(),
-        points: number().integer().min(0),
+        points: number().min(0),
       })
     )
     .min(1),
@@ -28,7 +28,7 @@ const UpdateClassificationSchemaValidation = object().shape({
     .of(
       object().shape({
         name: string().required(),
-        points: number().integer().min(0),
+        points: number().min(0),
       })
     )
     .min(1),

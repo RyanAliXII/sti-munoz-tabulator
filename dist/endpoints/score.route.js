@@ -23,7 +23,7 @@ const ScoreValidationSchema = (0, yup_1.array)().of((0, yup_1.object)().shape({
     eventId: (0, yup_1.string)().required().uuid(),
     teamId: (0, yup_1.string)().required().uuid(),
     rankId: (0, yup_1.string)().required().uuid(),
-    additionalPoints: (0, yup_1.number)().min(0).integer(),
+    additionalPoints: (0, yup_1.number)().min(0),
 }));
 router.get("/", (0, validate_1.validatePemissions)(["Score.Update"]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

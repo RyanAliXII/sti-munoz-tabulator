@@ -33,7 +33,7 @@ exports.Score = sequelize_2.default.define("score", {
         primaryKey: true,
     },
     additionalPoints: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.DECIMAL(10, 2),
         defaultValue: 0,
     },
     eventId: {
@@ -100,7 +100,7 @@ exports.Rank = sequelize_2.default.define("rank", {
         allowNull: false,
     },
     points: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.DECIMAL(10, 2),
     },
 });
 exports.RankClass = sequelize_2.default.define("classification", {

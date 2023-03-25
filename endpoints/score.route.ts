@@ -19,7 +19,7 @@ const ScoreValidationSchema = array().of(
     eventId: string().required().uuid(),
     teamId: string().required().uuid(),
     rankId: string().required().uuid(),
-    additionalPoints: number().min(0).integer(),
+    additionalPoints: number().min(0),
   })
 );
 router.get("/", validatePemissions(["Score.Update"]), async (req, res) => {
